@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fortune Roof — Кровельные материалы B2B</title>
+
+  <style>
+    /* ============================================================
+       RESET & CSS VARIABLES
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #06090e;
+      --bg2:      #080e0b;
+      --srf:      rgba(255,255,255,.04);
+      --srf-h:    rgba(255,255,255,.07);
+      --brd:      rgba(82,183,136,.14);
+      --brd-h:    rgba(82,183,136,.38);
+      --green:    #52b788;
+      --green-d:  #2d6a4f;
+      --amber:    #e8a838;
+      --amber2:   #f4845f;
+      --text:     #e8ede9;
+      --text2:    #a0b0a8;
+      --muted:    #5a6e62;
+      --r:        14px;
+      --r-lg:     22px;
+      --max:      1140px;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green-d); border-radius: 3px; }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ============================================================
+       LAYOUT HELPERS
+       ============================================================ */
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+    section { padding: 88px 0; }
+
+    .s-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .s-title {
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.18;
+      margin-bottom: 12px;
+    }
+    .s-title .g {
+      background: linear-gradient(135deg, var(--green) 0%, var(--amber) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .s-sub {
+      font-size: .95rem;
+      color: var(--text2);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       SCROLL ANIMATIONS
+       ============================================================ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+    .fade-up.d1 { transition-delay: .08s; }
+    .fade-up.d2 { transition-delay: .16s; }
+    .fade-up.d3 { transition-delay: .24s; }
+    .fade-up.d4 { transition-delay: .32s; }
+
+    /* ============================================================
+       NAV
+       ============================================================ */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 0;
+      transition: background .35s, box-shadow .35s, padding .35s;
+    }
+    #nav.scrolled {
+      background: rgba(6,9,14,.93);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 1px 0 var(--brd);
+      padding: 12px 0;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .nav-logo {
+      font-size: 1.15rem;
+      font-weight: 800;
+      white-space: nowrap;
+      background: linear-gradient(135deg, var(--green), var(--amber));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-link {
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--text2);
+      padding: 7px 13px;
+      border-radius: 8px;
+      white-space: nowrap;
+      transition: color .2s, background .2s;
+    }
+    .nav-link:hover { color: var(--text); background: var(--srf); }
+    .nav-cta {
+      font-size: .85rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--green-d), var(--green));
+      padding: 9px 20px;
+      border-radius: 10px;
+      white-space: nowrap;
+      transition: opacity .2s, transform .2s;
+    }
+    .nav-cta:hover { opacity: .88; transform: translateY(-1px); }
+
+    /* mobile nav */
+    .nav-mob { display: none; }
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: .25s;
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(82,183,136,.1) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+      pointer-events: none;
+    }
+    .hero-blob1, .hero-blob2 {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-blob1 {
+      width: 640px; height: 640px;
+      background: radial-gradient(circle, rgba(82,183,136,.09) 0%, transparent 70%);
+      top: -160px; right: -160px;
+      animation: blob 11s ease-in-out infinite alternate;
+    }
+    .hero-blob2 {
+      width: 480px; height: 480px;
+      background: radial-gradient(circle, rgba(232,168,56,.07) 0%, transparent 70%);
+      bottom: -100px; left: -80px;
+      animation: blob 14s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes blob {
+      from { transform: scale(1) translate(0,0); }
+      to   { transform: scale(1.25) translate(24px,-18px); }
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(82,183,136,.1);
+      border: 1px solid rgba(82,183,136,.3);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: .76rem;
+      font-weight: 600;
+      color: var(--green);
+      margin-bottom: 22px;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pdot 2s ease-in-out infinite;
+    }
+    @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.65)} }
+
+    .hero-h1 {
+      font-size: clamp(1.9rem, 4.8vw, 3.1rem);
+      font-weight: 900;
+      line-height: 1.14;
+      letter-spacing: -.025em;
+      margin-bottom: 20px;
+    }
+    .hero-h1 .grad {
+      background: linear-gradient(135deg, var(--green) 0%, var(--amber) 55%, var(--amber2) 100%);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gshift 5s ease infinite;
+    }
+    @keyframes gshift { 0%{background-position:0%} 50%{background-position:100%} 100%{background-position:0%} }
+
+    .hero-sub {
+      font-size: 1.02rem;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 34px;
+      max-width: 480px;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    /* ── Buttons ── */
+    .btn-prim {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--green-d), var(--green));
+      color: #fff;
+      font-weight: 700;
+      font-size: .95rem;
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 22px rgba(82,183,136,.38);
+      animation: breathe 3s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { box-shadow: 0 4px 22px rgba(82,183,136,.38); }
+      50%      { box-shadow: 0 6px 34px rgba(82,183,136,.58); }
+    }
+    .btn-prim::before {
+      content:'';
+      position:absolute; top:0; left:-100%;
+      width:60%; height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+      transform:skewX(-20deg);
+      animation:shine 2.6s ease-in-out infinite;
+    }
+    @keyframes shine { 0%{left:-100%} 60%{left:160%} 100%{left:160%} }
+    .btn-prim:hover { transform:translateY(-2px); }
+    .btn-prim:active { transform:scale(.98); }
+
+    .btn-out {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text);
+      font-weight: 700;
+      font-size: .95rem;
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: 1px solid var(--brd-h);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, border-color .2s, transform .2s;
+    }
+    .btn-out:hover {
+      background: var(--srf);
+      border-color: var(--green);
+      transform: translateY(-2px);
+    }
+
+    .hero-trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .8rem;
+      color: var(--text2);
+    }
+    .trust-item svg { width:15px; height:15px; color:var(--green); flex-shrink:0; }
+
+    /* Hero right — metrics card */
+    .hero-card {
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--brd);
+      border-radius: var(--r-lg);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-card::before {
+      content:'';
+      position:absolute; top:0; left:8%; right:8%; height:2px;
+      background:linear-gradient(90deg,transparent,var(--green),var(--amber),transparent);
+    }
+    .hero-card-title {
+      font-size:.72rem;
+      font-weight:700;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin-bottom:18px;
+    }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .mbox {
+      background: rgba(0,0,0,.2);
+      border: 1px solid var(--brd);
+      border-radius: 10px;
+      padding: 16px 14px;
+      text-align: center;
+      transition: border-color .25s;
+    }
+    .mbox:hover { border-color: var(--brd-h); }
+    .mbox-num {
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg,var(--green),var(--amber));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      line-height:1;
+      margin-bottom:5px;
+    }
+    .mbox-lbl {
+      font-size:.66rem;
+      color:var(--text2);
+      line-height:1.35;
+    }
+    .mbox-wide {
+      grid-column: 1/-1;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      background: linear-gradient(135deg,rgba(82,183,136,.1),rgba(232,168,56,.07));
+      border:1px solid rgba(82,183,136,.25);
+      border-radius:10px;
+      padding:14px 16px;
+    }
+    .mbox-wide svg { width:26px; height:26px; flex-shrink:0; color:var(--green); }
+    .mbox-wide strong { display:block; font-size:.85rem; font-weight:700; color:var(--green); }
+    .mbox-wide span { font-size:.72rem; color:var(--text2); }
+
+    /* ============================================================
+       WHO IS THIS FOR
+       ============================================================ */
+    #who { background: linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%); }
+    .who-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 14px;
+      margin-top: 48px;
+    }
+    .who-card {
+      background: var(--srf);
+      border: 1px solid var(--brd);
+      border-radius: var(--r);
+      padding: 24px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .28s, transform .28s, box-shadow .28s;
+    }
+    .who-card::before {
+      content:'';
+      position:absolute; inset:0;
+      background:radial-gradient(circle at 50% -10%,rgba(82,183,136,.09),transparent 65%);
+      opacity:0; transition:opacity .28s;
+    }
+    .who-card:hover::before { opacity:1; }
+    .who-card:hover {
+      border-color:var(--brd-h);
+      transform:translateY(-4px);
+      box-shadow:0 12px 32px rgba(82,183,136,.1);
+    }
+    .who-icon {
+      width:46px; height:46px;
+      border-radius:12px;
+      background:rgba(82,183,136,.1);
+      border:1px solid rgba(82,183,136,.2);
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:14px;
+    }
+    .who-icon svg { width:22px; height:22px; }
+    .who-title {
+      font-size:.9rem;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+    .who-pain {
+      font-size:.76rem;
+      color:var(--muted);
+      line-height:1.55;
+      margin-bottom:8px;
+      padding-left:10px;
+      border-left:2px solid rgba(244,132,95,.4);
+    }
+    .who-gain {
+      font-size:.76rem;
+      color:var(--text2);
+      line-height:1.55;
+      padding-left:10px;
+      border-left:2px solid rgba(82,183,136,.5);
+    }
+
+    /* ============================================================
+       ADVANTAGES
+       ============================================================ */
+    #adv { background: var(--bg2); }
+    .adv-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+      margin-top:48px;
+    }
+    .adv-card {
+      background:var(--srf);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      border:1px solid var(--brd);
+      border-radius:var(--r-lg);
+      padding:32px 26px;
+      position:relative;
+      overflow:hidden;
+      transition:border-color .28s, transform .28s, box-shadow .28s;
+    }
+    .adv-card::after {
+      content:'';
+      position:absolute; bottom:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,var(--green),var(--amber));
+      opacity:0; transition:opacity .28s;
+    }
+    .adv-card:hover::after { opacity:1; }
+    .adv-card:hover {
+      border-color:var(--brd-h);
+      transform:translateY(-4px);
+      box-shadow:0 16px 40px rgba(82,183,136,.12);
+    }
+    .adv-icon {
+      width:62px; height:62px;
+      border-radius:16px;
+      background:linear-gradient(135deg,rgba(82,183,136,.12),rgba(232,168,56,.08));
+      border:1px solid rgba(82,183,136,.22);
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:22px;
+    }
+    .adv-icon svg { width:30px; height:30px; }
+    .adv-title { font-size:1rem; font-weight:700; margin-bottom:10px; }
+    .adv-desc { font-size:.82rem; color:var(--text2); line-height:1.68; }
+    .adv-list {
+      list-style:none;
+      margin-top:14px;
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+    .adv-list li {
+      font-size:.78rem;
+      color:var(--text2);
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+    }
+    .adv-list li::before {
+      content:'';
+      width:5px; height:5px;
+      border-radius:50%;
+      background:var(--green);
+      flex-shrink:0;
+      margin-top:7px;
+    }
+
+    /* ============================================================
+       HOW WE WORK — STEPPER
+       ============================================================ */
+    #how { background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%); }
+    .stepper {
+      margin-top:56px;
+      position:relative;
+    }
+    .stepper-track {
+      display:flex;
+      align-items:flex-start;
+      position:relative;
+    }
+    .stepper-track::before {
+      content:'';
+      position:absolute;
+      top:27px; left:54px; right:54px; height:2px;
+      background:linear-gradient(90deg,var(--green-d),var(--amber));
+      opacity:.35;
+      border-radius:2px;
+    }
+    .step {
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      padding:0 10px;
+      position:relative;
+    }
+    .step-circle {
+      width:54px; height:54px;
+      border-radius:50%;
+      background:linear-gradient(135deg,var(--green-d),#1a4a2e);
+      border:2px solid var(--green);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem;
+      font-weight:800;
+      color:var(--green);
+      position:relative; z-index:1;
+      margin-bottom:18px;
+      transition:box-shadow .3s;
+    }
+    .step:hover .step-circle { box-shadow:0 0 22px rgba(82,183,136,.45); }
+    .step-title { font-size:.88rem; font-weight:700; margin-bottom:6px; }
+    .step-desc { font-size:.75rem; color:var(--text2); line-height:1.55; }
+    .step-time {
+      display:inline-block;
+      margin-top:8px;
+      font-size:.66rem;
+      font-weight:700;
+      color:var(--amber);
+      background:rgba(232,168,56,.1);
+      border:1px solid rgba(232,168,56,.25);
+      padding:2px 10px;
+      border-radius:100px;
+    }
+
+    /* ============================================================
+       ASSORTMENT TAGS
+       ============================================================ */
+    #assortment { background:var(--bg); }
+    .tags-cloud {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:36px;
+    }
+    .tag {
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:9px 16px;
+      border-radius:100px;
+      background:var(--srf);
+      border:1px solid var(--brd);
+      font-size:.83rem;
+      font-weight:500;
+      color:var(--text2);
+      cursor:pointer;
+      user-select:none;
+      transition:all .22s ease;
+    }
+    .tag svg { width:14px; height:14px; flex-shrink:0; }
+    .tag:hover {
+      border-color:var(--brd-h);
+      color:var(--text);
+      background:var(--srf-h);
+      transform:translateY(-1px);
+    }
+    .tag.active {
+      background:linear-gradient(135deg,rgba(82,183,136,.16),rgba(232,168,56,.1));
+      border-color:var(--green);
+      color:var(--green);
+      box-shadow:0 0 16px rgba(82,183,136,.2);
+    }
+    .tags-note { margin-top:16px; font-size:.76rem; color:var(--muted); }
+
+    /* ============================================================
+       WHY B2B
+       ============================================================ */
+    #why { background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%); }
+    .why-inner {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:64px;
+      align-items:center;
+      margin-top:48px;
+    }
+    .why-points { display:flex; flex-direction:column; gap:26px; }
+    .why-point { display:flex; gap:16px; align-items:flex-start; }
+    .why-num {
+      width:34px; height:34px;
+      border-radius:9px;
+      background:linear-gradient(135deg,rgba(82,183,136,.14),rgba(232,168,56,.09));
+      border:1px solid rgba(82,183,136,.25);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.82rem;
+      font-weight:800;
+      color:var(--green);
+      flex-shrink:0;
+    }
+    .why-point-title { font-size:.92rem; font-weight:700; margin-bottom:4px; }
+    .why-point-desc { font-size:.8rem; color:var(--text2); line-height:1.6; }
+    .why-badges {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .why-badge {
+      background:var(--srf);
+      border:1px solid var(--brd);
+      border-radius:var(--r);
+      padding:20px 16px;
+      text-align:center;
+      transition:border-color .25s, transform .25s;
+    }
+    .why-badge:hover { border-color:var(--brd-h); transform:translateY(-3px); }
+    .why-badge-val {
+      font-size:1.45rem;
+      font-weight:800;
+      background:linear-gradient(135deg,var(--green),var(--amber));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      line-height:1;
+      margin-bottom:6px;
+    }
+    .why-badge-lbl { font-size:.68rem; color:var(--text2); line-height:1.35; }
+
+    /* ============================================================
+       FORM SECTION
+       ============================================================ */
+    #form-section { background:var(--bg2); }
+    .form-wrap {
+      max-width:700px;
+      margin:48px auto 0;
+      background:var(--srf);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      border:1px solid var(--brd);
+      border-radius:var(--r-lg);
+      padding:44px 40px;
+      position:relative;
+      overflow:hidden;
+    }
+    .form-wrap::before {
+      content:'';
+      position:absolute; top:0; left:8%; right:8%; height:2px;
+      background:linear-gradient(90deg,transparent,var(--green),var(--amber),transparent);
+    }
+    .form-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    .fg { display:flex; flex-direction:column; gap:6px; }
+    .fg.full { grid-column:1/-1; }
+    label {
+      font-size:.76rem;
+      font-weight:600;
+      color:var(--text2);
+      letter-spacing:.02em;
+    }
+    label .req { color:var(--amber); margin-left:2px; }
+    input, select, textarea {
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:9px;
+      color:var(--text);
+      font-size:.88rem;
+      font-family:inherit;
+      padding:10px 13px;
+      outline:none;
+      transition:border-color .2s, box-shadow .2s;
+      width:100%;
+    }
+    input::placeholder, textarea::placeholder { color:var(--muted); }
+    input:focus, select:focus, textarea:focus {
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(82,183,136,.12);
+    }
+    input.err, select.err, textarea.err {
+      border-color:#e05;
+      box-shadow:0 0 0 3px rgba(238,0,85,.1);
+    }
+    select {
+      appearance:none;
+      -webkit-appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a6e62' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;
+      background-position:right 12px center;
+      padding-right:36px;
+      cursor:pointer;
+    }
+    select option { background:#0e1610; }
+    textarea { resize:vertical; min-height:82px; }
+    .form-submit-row { grid-column:1/-1; margin-top:6px; }
+    .form-note { font-size:.7rem; color:var(--muted); margin-top:10px; line-height:1.5; }
+
+    /* ============================================================
+       MODAL
+       ============================================================ */
+    #overlay {
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.78);
+      backdrop-filter:blur(5px);
+      -webkit-backdrop-filter:blur(5px);
+      z-index:300;
+      display:flex; align-items:center; justify-content:center;
+      padding:24px;
+      opacity:0; visibility:hidden;
+      transition:opacity .3s, visibility .3s;
+    }
+    #overlay.open { opacity:1; visibility:visible; }
+    .modal {
+      background:#0c1510;
+      border:1px solid var(--brd-h);
+      border-radius:var(--r-lg);
+      padding:36px 30px;
+      max-width:520px;
+      width:100%;
+      position:relative;
+      transform:translateY(18px) scale(.97);
+      transition:transform .3s;
+    }
+    #overlay.open .modal { transform:none; }
+    .modal-close {
+      position:absolute; top:14px; right:14px;
+      width:30px; height:30px;
+      border-radius:8px;
+      background:var(--srf);
+      border:1px solid var(--brd);
+      color:var(--text2);
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      transition:background .2s, color .2s;
+    }
+    .modal-close:hover { background:var(--srf-h); color:var(--text); }
+    .modal-title { font-size:1.1rem; font-weight:800; margin-bottom:5px; }
+    .modal-sub { font-size:.8rem; color:var(--text2); margin-bottom:18px; }
+    .modal-text {
+      background:rgba(0,0,0,.3);
+      border:1px solid var(--brd);
+      border-radius:9px;
+      padding:14px;
+      font-size:.78rem;
+      color:var(--text2);
+      line-height:1.75;
+      white-space:pre-wrap;
+      max-height:210px;
+      overflow-y:auto;
+      margin-bottom:18px;
+      font-family:'Courier New',monospace;
+    }
+    .modal-text::-webkit-scrollbar { width:4px; }
+    .modal-text::-webkit-scrollbar-thumb { background:var(--green-d); border-radius:2px; }
+    .modal-actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn-copy {
+      flex:1;
+      padding:11px 18px;
+      border-radius:9px;
+      border:1px solid var(--brd-h);
+      background:transparent;
+      color:var(--text);
+      font-size:.85rem;
+      font-weight:700;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center; gap:7px;
+      transition:background .2s, border-color .2s;
+    }
+    .btn-copy:hover { background:var(--srf); border-color:var(--green); }
+    .btn-copy svg { width:15px; height:15px; }
+    .btn-wa {
+      flex:1;
+      padding:11px 18px;
+      border-radius:9px;
+      border:none;
+      background:linear-gradient(135deg,#128c7e,#25d366);
+      color:#fff;
+      font-size:.85rem;
+      font-weight:700;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center; gap:7px;
+      text-decoration:none;
+      transition:opacity .2s, transform .2s;
+    }
+    .btn-wa:hover { opacity:.88; transform:translateY(-1px); }
+    .btn-wa svg { width:17px; height:17px; }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      background:var(--bg);
+      border-top:1px solid var(--brd);
+      padding:36px 0;
+    }
+    .footer-inner {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+    .footer-logo {
+      font-size:1.05rem;
+      font-weight:800;
+      background:linear-gradient(135deg,var(--green),var(--amber));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .footer-contacts { display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+    .footer-contact {
+      display:flex; align-items:center; gap:6px;
+      font-size:.8rem; color:var(--text2);
+      transition:color .2s;
+    }
+    .footer-contact:hover { color:var(--text); }
+    .footer-contact svg { width:14px; height:14px; color:var(--green); flex-shrink:0; }
+    .footer-copy { font-size:.7rem; color:var(--muted); }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media(max-width:980px) {
+      .who-grid { grid-template-columns:1fr 1fr; }
+      .adv-grid { grid-template-columns:1fr 1fr; }
+    }
+    @media(max-width:768px) {
+      .hero-inner { grid-template-columns:1fr; gap:40px; }
+      .hero-visual-col { display:none; }
+      .nav-links { display:none; }
+      .hamburger { display:flex; }
+      .nav-mob {
+        position:fixed;
+        top:0; left:0; right:0; bottom:0;
+        background:rgba(6,9,14,.97);
+        backdrop-filter:blur(16px);
+        z-index:200;
+        display:none;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:8px;
+      }
+      .nav-mob.open { display:flex; }
+      .nav-mob a {
+        font-size:1.2rem;
+        font-weight:700;
+        color:var(--text2);
+        padding:12px 32px;
+        border-radius:12px;
+        transition:color .2s, background .2s;
+      }
+      .nav-mob a:hover { color:var(--text); background:var(--srf); }
+      .nav-mob-close {
+        position:absolute;
+        top:20px; right:20px;
+        background:var(--srf);
+        border:1px solid var(--brd);
+        color:var(--text);
+        width:38px; height:38px;
+        border-radius:10px;
+        display:flex; align-items:center; justify-content:center;
+        cursor:pointer;
+        font-size:1.2rem;
+      }
+      .stepper-track {
+        flex-direction:column;
+        align-items:flex-start;
+        gap:0;
+      }
+      .stepper-track::before {
+        top:26px; bottom:26px;
+        left:26px; right:auto;
+        width:2px; height:auto;
+      }
+      .step {
+        flex-direction:row;
+        text-align:left;
+        align-items:flex-start;
+        gap:18px;
+        padding:0 0 28px;
+      }
+      .step-circle { flex-shrink:0; margin-bottom:0; }
+      .why-inner { grid-template-columns:1fr; gap:40px; }
+      .form-grid { grid-template-columns:1fr; }
+      .fg.full { grid-column:1; }
+      section { padding:64px 0; }
+    }
+    @media(max-width:560px) {
+      .who-grid { grid-template-columns:1fr; }
+      .adv-grid { grid-template-columns:1fr; }
+      .why-badges { grid-template-columns:1fr 1fr; }
+      .form-wrap { padding:30px 18px; }
+      .modal { padding:26px 18px; }
+      .hero-ctas { flex-direction:column; }
+      .btn-prim,.btn-out { justify-content:center; }
+      .modal-actions { flex-direction:column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     КОНФИГУРАЦИЯ — редактируй здесь все данные
+     ============================================================ -->
+<script>
+/* ================================================================
+   ▼▼▼  РЕДАКТИРУЕМЫЕ ДАННЫЕ — меняй здесь  ▼▼▼
+   ================================================================ */
+const CFG = {
+  brand:      "Fortune Roof",
+  geo:        "Москва и МО",
+  tagline:    "Кровельные материалы и комплектация — поставка и монтаж для B2B",
+  subHero:    "Работаем с прорабами, строительными компаниями и девелоперами. Смета с узлами за 60 минут — меньше простоев, ноль пересорта.",
+  products:   "металлочерепица, клик-фальц, профнастил, водосток, мембраны, утеплитель, доборные, крепёж",
+  utp: [
+    "Смета с узлами за 60 минут",
+    "Доставка 24–72 часа по МО",
+    "Единая ответственность: материал + монтаж"
+  ],
+  metrics: [
+    { val: "60 мин",  lbl: "смета с узлами\nи доборными" },
+    { val: "200+",    lbl: "объектов\nсдано" },
+    { val: "24–72ч",  lbl: "доставка\nпо МО" },
+    { val: "5 лет",   lbl: "гарантия\nна работы" }
+  ],
+  contacts: {
+    phone:        "tel:+70000000000",          /* ← твой телефон */
+    phoneDisplay: "+7 (000) 000-00-00",
+    whatsapp:     "https://wa.me/70000000000", /* ← твой WhatsApp */
+    email:        "mailto:info@fortuneroof.ru" /* ← твой email */
+  }
+};
+/* ================================================================
+   ▲▲▲  конец блока редактирования  ▲▲▲
+   ================================================================ */
+</script>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  NAV                                     ║
+     ╚══════════════════════════════════════════╝ -->
+<nav id="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo" id="nav-logo">Fortune Roof</a>
+      <div class="nav-links">
+        <a href="#who"          class="nav-link">Кому</a>
+        <a href="#adv"          class="nav-link">Преимущества</a>
+        <a href="#how"          class="nav-link">Как работаем</a>
+        <a href="#assortment"   class="nav-link">Ассортимент</a>
+        <a href="#form-section" class="nav-link">Запрос КП</a>
+      </div>
+      <a href="#form-section" class="nav-cta">Запросить КП</a>
+      <button class="hamburger" id="hamburger" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div class="nav-mob" id="nav-mob">
+  <button class="nav-mob-close" id="nav-mob-close">✕</button>
+  <a href="#who"          onclick="closeMob()">Кому подходит</a>
+  <a href="#adv"          onclick="closeMob()">Преимущества</a>
+  <a href="#how"          onclick="closeMob()">Как работаем</a>
+  <a href="#assortment"   onclick="closeMob()">Ассортимент</a>
+  <a href="#why"          onclick="closeMob()">Почему B2B</a>
+  <a href="#form-section" onclick="closeMob()" class="btn-prim" style="margin-top:12px;border-radius:12px;">Запросить КП</a>
+</div>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  HERO                                    ║
+     ╚══════════════════════════════════════════╝ -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-blob1"></div>
+  <div class="hero-blob2"></div>
+  <div class="container">
+    <div class="hero-inner">
+
+      <!-- LEFT -->
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          B2B · <span id="hero-geo">Москва и МО</span>
+        </div>
+        <h1 class="hero-h1">
+          <span class="grad">Кровельные материалы</span><br>
+          и монтаж под ключ<br>для строительного бизнеса
+        </h1>
+        <p class="hero-sub" id="hero-sub">
+          Работаем с прорабами, строительными компаниями и девелоперами.
+          Смета с узлами за 60 минут — меньше простоев, ноль пересорта.
+        </p>
+        <div class="hero-ctas">
+          <a href="#form-section" class="btn-prim">
+            <!-- send icon -->
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Запросить КП
+          </a>
+          <a href="#assortment" class="btn-out">
+            <!-- list icon -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="17" height="17"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1"/><circle cx="3" cy="12" r="1"/><circle cx="3" cy="18" r="1"/></svg>
+            Получить прайс
+          </a>
+        </div>
+        <div class="hero-trust">
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Официальный договор
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Без предоплаты за замер
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Один менеджер на объект
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT — metrics card -->
+      <div class="hero-visual-col">
+        <div class="hero-card fade-up d2">
+          <div class="hero-card-title">Цифры в деле</div>
+          <div class="metrics-grid" id="metrics-grid">
+            <!-- filled by JS -->
+          </div>
+          <div style="margin-top:10px;">
+            <div class="mbox-wide">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              <div>
+                <strong>Работаем по договору</strong>
+                <span>Фиксированная цена · Поэтапная оплата</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  WHO IS THIS FOR                         ║
+     ╚══════════════════════════════════════════╝ -->
+<section id="who">
+  <div class="container">
+    <div class="s-label fade-up">Кому подходит</div>
+    <h2 class="s-title fade-up d1">Работаем с <span class="g">профессионалами</span><br>строительного рынка</h2>
+    <p class="s-sub fade-up d2">Понимаем специфику B2B: сроки горят, ошибки стоят дорого. Поэтому закрываем вопрос комплектно и с гарантией.</p>
+
+    <div class="who-grid">
+
+      <div class="who-card fade-up d1">
+        <div class="who-icon">
+          <!-- building icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#wg)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="wg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#52b788"/><stop offset="1" stop-color="#e8a838"/></linearGradient></defs><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="who-title">Строительные компании</div>
+        <div class="who-pain">Проблема: поставщики срывают сроки, комплектация приходит не полностью</div>
+        <div class="who-gain">Плюс: один источник — материалы + монтаж + гарантия, без перекидывания ответственности</div>
+      </div>
+
+      <div class="who-card fade-up d2">
+        <div class="who-icon">
+          <!-- hardhat icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#wg2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="wg2" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#52b788"/><stop offset="1" stop-color="#e8a838"/></linearGradient></defs><path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/><path d="M10 10V5a2 2 0 0 1 4 0v5"/><path d="M4 15v-3a8 8 0 0 1 16 0v3"/></svg>
+        </div>
+        <div class="who-title">Прорабы и бригады</div>
+        <div class="who-pain">Проблема: нет времени на объезд баз, дозаказы тормозят монтаж</div>
+        <div class="who-gain">Плюс: полная комплектация с узлами за 60 мин, доставка на объект по слоту</div>
+      </div>
+
+      <div class="who-card fade-up d3">
+        <div class="who-icon">
+          <!-- design/ruler icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#wg3)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="wg3" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#52b788"/><stop offset="1" stop-color="#e8a838"/></linearGradient></defs><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="who-title">Архитекторы и проектировщики</div>
+        <div class="who-pain">Проблема: подрядчики заменяют материал на дешёвый аналог без согласования</div>
+        <div class="who-gain">Плюс: работаем строго по спецификации, предоставляем сертификаты на каждую позицию</div>
+      </div>
+
+      <div class="who-card fade-up d4">
+        <div class="who-icon">
+          <!-- city/developer icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#wg4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="wg4" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#52b788"/><stop offset="1" stop-color="#e8a838"/></linearGradient></defs><line x1="3" y1="22" x2="21" y2="22"/><polyline points="5 22 5 12 12 2 19 12 19 22"/><line x1="9" y1="22" x2="9" y2="14"/><line x1="15" y1="22" x2="15" y2="14"/><rect x="9" y="14" width="6" height="8"/></svg>
+        </div>
+        <div class="who-title">Девелоперы и застройщики</div>
+        <div class="who-pain">Проблема: разные подрядчики, размытая ответственность при рекламациях</div>
+        <div class="who-gain">Плюс: единый договор на поставку + монтаж, акт приёмки, гарантийный паспорт</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  ADVANTAGES                              ║
+     ╚══════════════════════════════════════════╝ -->
+<section id="adv">
+  <div class="container">
+    <div class="s-label fade-up">Преимущества</div>
+    <h2 class="s-title fade-up d1">3 причины работать<br>с нами <span class="g">долгосрочно</span></h2>
+
+    <div class="adv-grid">
+
+      <div class="adv-card fade-up d1">
+        <div class="adv-icon">
+          <!-- document/spec icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#ag1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="ag1" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#52b788"/><stop offset="1" stop-color="#e8a838"/></linearGradient></defs><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="adv-title">Смета и спецификация без сюрпризов</div>
+        <div class="adv-desc">Считаем комплектно: основной материал + узлы примыканий + доборные элементы + крепёж. Никаких дозаказов в последний день.</div>
+        <ul class="adv-list">
+          <li>Коньки, торцевые планки, ендовы</li>
+          <li>Проходные элементы и вентиляция</li>
+          <li>Крепёж точно по нормативу</li>
+          <li>Смета в PDF за 60 минут</li>
+        </ul>
+      </div>
+
+      <div class="adv-card fade-up d2">
+        <div class="adv-icon">
+          <!-- truck icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#ag2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="ag2" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#52b788"/><stop offset="1" stop-color="#e8a838"/></linearGradient></defs><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div class="adv-title">Сроки и логистика</div>
+        <div class="adv-desc">Доставляем по Москве и МО за 24–72 часа. Работаем по слотам — материал приезжает именно тогда, когда нужна бригада.</div>
+        <ul class="adv-list">
+          <li>Согласование слота доставки</li>
+          <li>Паллетная отгрузка без пересорта</li>
+          <li>Разгрузка на объекте</li>
+          <li>Акт приёмки при получении</li>
+        </ul>
+      </div>
+
+      <div class="adv-card fade-up d3">
+        <div class="adv-icon">
+          <!-- shield check icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="url(#ag3)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="ag3" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#52b788"/><stop offset="1" stop-color="#e8a838"/></linearGradient></defs><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </div>
+        <div class="adv-title">Качество и ответственность</div>
+        <div class="adv-desc">Только сертифицированные материалы от проверенных производителей. Работы принимаем по акту, выдаём гарантийный паспорт.</div>
+        <ul class="adv-list">
+          <li>Сертификаты на каждую позицию</li>
+          <li>Контроль комплектации при отгрузке</li>
+          <li>5 лет гарантии на монтаж</li>
+          <li>Единая точка ответственности</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  HOW WE WORK                             ║
+     ╚══════════════════════════════════════════╝ -->
+<section id="how">
+  <div class="container">
+    <div class="s-label fade-up">Как работаем</div>
+    <h2 class="s-title fade-up d1">От звонка до сданной <span class="g">кровли</span></h2>
+    <p class="s-sub fade-up d2">Четыре чётких шага — прозрачный процесс без неожиданностей на каждом этапе.</p>
+
+    <div class="stepper fade-up d2">
+      <div class="stepper-track">
+
+        <div class="step">
+          <div class="step-circle">1</div>
+          <div>
+            <div class="step-title">Запрос</div>
+            <div class="step-desc">Звоните, пишете в WhatsApp или заполняете форму. Уточняем объект и площадь.</div>
+            <span class="step-time">до 10 минут</span>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-circle">2</div>
+          <div>
+            <div class="step-title">Уточнение ТЗ</div>
+            <div class="step-desc">Выясняем тип кровли, геометрию, пожелания по материалу и срокам. При необходимости — выезд на замер.</div>
+            <span class="step-time">1 день</span>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-circle">3</div>
+          <div>
+            <div class="step-title">КП и смета</div>
+            <div class="step-desc">Готовим детальную спецификацию с узлами, доборными и крепежом. Фиксируем цену в договоре.</div>
+            <span class="step-time">60 минут</span>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-circle">4</div>
+          <div>
+            <div class="step-title">Доставка и монтаж</div>
+            <div class="step-desc">Привозим комплект по слоту. Монтируем, подписываем акт, выдаём гарантийный паспорт.</div>
+            <span class="step-time">24–72 ч доставка</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  ASSORTMENT TAGS                         ║
+     ╚══════════════════════════════════════════╝ -->
+<section id="assortment">
+  <div class="container">
+    <div class="s-label fade-up">Ассортимент</div>
+    <h2 class="s-title fade-up d1">Всё для кровли —<br><span class="g">в одном месте</span></h2>
+    <p class="s-sub fade-up d2">Поставляем весь комплект: от основного материала до последнего самореза. Нажмите на категорию, чтобы выбрать.</p>
+
+    <div class="tags-cloud fade-up d2" id="tags-cloud">
+
+      <button class="tag active" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Металлочерепица
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l9-4 9 4v6c0 5-4 9-9 10C7 21 3 17 3 12V6z"/></svg>
+        Клик-фальц
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Профнастил
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        Водосток
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        Снегозадержатели
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Мягкая кровля
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Мембраны и плёнки
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Утеплитель
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Софиты и ветровые планки
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12l-8.5 8.5a2.12 2.12 0 0 1-3-3L12 9"/><path d="M16 8l4-4 1 4-4 1z"/></svg>
+        Доборные элементы
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        Крепёж и метизы
+      </button>
+
+      <button class="tag" onclick="toggleTag(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Проходные элементы
+      </button>
+
+    </div>
+    <p class="tags-note fade-up">Выберите нужные категории и упомяните их в заявке — подберём оптимальный комплект.</p>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  WHY B2B                                 ║
+     ╚══════════════════════════════════════════╝ -->
+<section id="why">
+  <div class="container">
+    <div class="s-label fade-up">Почему выгодно</div>
+    <h2 class="s-title fade-up d1">Конкретная экономия<br>для <span class="g">вашего бизнеса</span></h2>
+
+    <div class="why-inner">
+
+      <div class="why-points">
+        <div class="why-point fade-up d1">
+          <div class="why-num">1</div>
+          <div>
+            <div class="why-point-title">Экономия времени — до 4 часов на объект</div>
+            <div class="why-point-desc">Не нужно объезжать несколько баз и сводить разные накладные. Одна заявка — полный комплект. Смета готова за 60 минут, доставка в согласованный слот без ожидания.</div>
+          </div>
+        </div>
+        <div class="why-point fade-up d2">
+          <div class="why-num">2</div>
+          <div>
+            <div class="why-point-title">Снижение ошибок — ноль пересорта и недостачи</div>
+            <div class="why-point-desc">Считаем спецификацию по чертежам или обмерам с учётом всех узлов. Контроль комплектации перед отгрузкой исключает «приедем завтра, забыли доборы».</div>
+          </div>
+        </div>
+        <div class="why-point fade-up d3">
+          <div class="why-num">3</div>
+          <div>
+            <div class="why-point-title">Меньше возвратов — единая ответственность</div>
+            <div class="why-point-desc">Когда материал и монтаж от одного подрядчика, споры о рекламациях исчезают. Один договор, один гарантийный паспорт, один номер телефона.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="why-badges">
+        <div class="why-badge fade-up d1">
+          <div class="why-badge-val">60 мин</div>
+          <div class="why-badge-lbl">КП с узлами<br>и доборными</div>
+        </div>
+        <div class="why-badge fade-up d2">
+          <div class="why-badge-val">24–72ч</div>
+          <div class="why-badge-lbl">доставка<br>по МО</div>
+        </div>
+        <div class="why-badge fade-up d3">
+          <div class="why-badge-val">1</div>
+          <div class="why-badge-lbl">менеджер<br>на весь объект</div>
+        </div>
+        <div class="why-badge fade-up d4">
+          <div class="why-badge-val">5 лет</div>
+          <div class="why-badge-lbl">гарантия<br>на работы</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  FORM                                    ║
+     ╚══════════════════════════════════════════╝ -->
+<section id="form-section">
+  <div class="container">
+    <div class="s-label fade-up" style="text-align:center;">Запрос КП</div>
+    <h2 class="s-title fade-up d1" style="text-align:center;">Получите коммерческое<br>предложение за <span class="g">60 минут</span></h2>
+    <p class="s-sub fade-up d2" style="text-align:center;margin:0 auto 0;">Заполните форму — менеджер перезвонит, уточнит детали и пришлёт детальную смету.</p>
+
+    <div class="form-wrap fade-up d2">
+      <form id="kp-form" novalidate>
+        <div class="form-grid">
+
+          <div class="fg">
+            <label for="f-name">Имя <span class="req">*</span></label>
+            <input type="text" id="f-name" placeholder="Иван Петров" autocomplete="name">
+          </div>
+
+          <div class="fg">
+            <label for="f-company">Компания</label>
+            <input type="text" id="f-company" placeholder="ООО «СтройПроект»" autocomplete="organization">
+          </div>
+
+          <div class="fg">
+            <label for="f-phone">Телефон <span class="req">*</span></label>
+            <input type="tel" id="f-phone" placeholder="+7 (999) 000-00-00" autocomplete="tel">
+          </div>
+
+          <div class="fg">
+            <label for="f-object">Объект (адрес / район) <span class="req">*</span></label>
+            <input type="text" id="f-object" placeholder="Красногорск, ул. Лесная 5">
+          </div>
+
+          <div class="fg">
+            <label for="f-type">Тип кровли <span class="req">*</span></label>
+            <select id="f-type">
+              <option value="">— выберите —</option>
+              <option>Металлочерепица</option>
+              <option>Клик-фальц</option>
+              <option>Профнастил</option>
+              <option>Мягкая кровля (битум)</option>
+              <option>Керамическая черепица</option>
+              <option>Другое</option>
+            </select>
+          </div>
+
+          <div class="fg">
+            <label for="f-area">Площадь кровли (м²)</label>
+            <input type="text" id="f-area" placeholder="~250 м²">
+          </div>
+
+          <div class="fg full">
+            <label for="f-comment">Комментарий</label>
+            <textarea id="f-comment" placeholder="Что важно: сроки, особенности кровли, нужен ли монтаж, есть ли чертежи..."></textarea>
+          </div>
+
+          <div class="form-submit-row">
+            <button type="submit" class="btn-prim" style="width:100%;justify-content:center;font-size:1rem;padding:15px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Сформировать заявку
+            </button>
+            <p class="form-note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Мы не рассылаем спам и не передаём данные третьим лицам.</p>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  FOOTER                                  ║
+     ╚══════════════════════════════════════════╝ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo" id="footer-logo">Fortune Roof</div>
+      <div class="footer-contacts" id="footer-contacts">
+        <!-- filled by JS -->
+      </div>
+      <div class="footer-copy" id="footer-geo">Москва и МО</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  MODAL                                   ║
+     ╚══════════════════════════════════════════╝ -->
+<div id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-h">
+    <button class="modal-close" id="modal-close" aria-label="Закрыть">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-title" id="modal-h">Заявка сформирована</div>
+    <div class="modal-sub">Скопируйте текст или отправьте напрямую через WhatsApp</div>
+    <div class="modal-text" id="modal-text"></div>
+    <div class="modal-actions">
+      <button class="btn-copy" id="btn-copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Скопировать
+      </button>
+      <a class="btn-wa" id="btn-wa" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Открыть WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+/* ── Применяем CFG в DOM ── */
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Logo & title
+  const brand = CFG.brand;
+  document.title = brand + ' — Кровельные материалы B2B';
+  document.querySelectorAll('#nav-logo, #footer-logo').forEach(el => el.textContent = brand);
+  document.getElementById('hero-geo').textContent = CFG.geo;
+  document.getElementById('footer-geo').textContent = CFG.geo;
+  document.getElementById('hero-sub').textContent = CFG.subHero;
+
+  // Metrics grid
+  const mg = document.getElementById('metrics-grid');
+  CFG.metrics.forEach(function(m) {
+    const box = document.createElement('div');
+    box.className = 'mbox';
+    box.innerHTML = '<div class="mbox-num">' + m.val + '</div><div class="mbox-lbl">' + m.lbl.replace('\n','<br>') + '</div>';
+    mg.appendChild(box);
+  });
+
+  // Footer contacts
+  const fc = document.getElementById('footer-contacts');
+  const fcItems = [
+    { href: CFG.contacts.phone, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l1.13-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>', label: CFG.contacts.phoneDisplay },
+    { href: CFG.contacts.whatsapp, icon: '<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>', label: 'WhatsApp' },
+    { href: CFG.contacts.email, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>', label: CFG.contacts.email.replace('mailto:','') }
+  ];
+  fcItems.forEach(function(item) {
+    const a = document.createElement('a');
+    a.className = 'footer-contact';
+    a.href = item.href;
+    a.innerHTML = item.icon + item.label;
+    fc.appendChild(a);
+  });
+
+  // ── Nav scroll ──
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', function() {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ── Hamburger ──
+  const mob = document.getElementById('nav-mob');
+  document.getElementById('hamburger').addEventListener('click', function() {
+    mob.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+  document.getElementById('nav-mob-close').addEventListener('click', closeMob);
+
+  // ── IntersectionObserver ──
+  const io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(function(el) { io.observe(el); });
+
+  // ── Form submit ──
+  document.getElementById('kp-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!validateForm()) return;
+    const msg = buildMessage();
+    showModal(msg);
+  });
+
+  // ── Modal close ──
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // ── Copy button ──
+  document.getElementById('btn-copy').addEventListener('click', function() {
+    const text = document.getElementById('modal-text').textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      const btn = document.getElementById('btn-copy');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polyline points="20 6 9 17 4 12"/></svg> Скопировано!';
+      btn.style.borderColor = 'var(--green)';
+      btn.style.color = 'var(--green)';
+      setTimeout(function() {
+        btn.innerHTML = orig;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 2000);
+    });
+  });
+
+}); // end DOMContentLoaded
+
+/* ── Helpers ── */
+function closeMob() {
+  document.getElementById('nav-mob').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleTag(el) {
+  el.classList.toggle('active');
+}
+
+function validateForm() {
+  let ok = true;
+  const fields = [
+    { id:'f-name',   check: function(v){ return v.trim().length >= 2; } },
+    { id:'f-phone',  check: function(v){ return v.replace(/\D/g,'').length >= 10; } },
+    { id:'f-object', check: function(v){ return v.trim().length >= 3; } },
+    { id:'f-type',   check: function(v){ return v !== ''; } }
+  ];
+  fields.forEach(function(f) {
+    const el = document.getElementById(f.id);
+    const valid = f.check(el.value);
+    el.classList.toggle('err', !valid);
+    if (!valid) ok = false;
+  });
+  if (!ok) {
+    const first = document.querySelector('.err');
+    if (first) first.focus();
+  }
+  return ok;
+}
+
+function buildMessage() {
+  const now = new Date();
+  const d = now.toLocaleDateString('ru-RU');
+  const t = now.toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'});
+  const name    = document.getElementById('f-name').value.trim();
+  const company = document.getElementById('f-company').value.trim();
+  const phone   = document.getElementById('f-phone').value.trim();
+  const obj     = document.getElementById('f-object').value.trim();
+  const type    = document.getElementById('f-type').value;
+  const area    = document.getElementById('f-area').value.trim();
+  const comment = document.getElementById('f-comment').value.trim();
+
+  let lines = [];
+  lines.push('🏠 Новая заявка — ' + CFG.brand);
+  lines.push('──────────────────────');
+  lines.push('Имя: ' + name);
+  if (company) lines.push('Компания: ' + company);
+  lines.push('Телефон: ' + phone);
+  lines.push('Объект: ' + obj);
+  if (type) lines.push('Тип кровли: ' + type);
+  if (area) lines.push('Площадь: ' + area);
+  if (comment) lines.push('Комментарий: ' + comment);
+  lines.push('──────────────────────');
+  lines.push('Дата: ' + d + ' · ' + t);
+  return lines.join('\n');
+}
+
+function showModal(text) {
+  document.getElementById('modal-text').textContent = text;
+  // WhatsApp link
+  const waBase = CFG.contacts.whatsapp;
+  if (waBase && waBase !== 'https://wa.me/') {
+    const num = waBase.replace('https://wa.me/','');
+    document.getElementById('btn-wa').href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(text);
+    document.getElementById('btn-wa').style.display = 'flex';
+  } else {
+    document.getElementById('btn-wa').style.display = 'none';
+  }
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+</script>
+
+</body>
+</html>
